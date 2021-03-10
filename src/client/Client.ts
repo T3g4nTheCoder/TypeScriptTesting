@@ -36,12 +36,6 @@ class Bot extends Client {
 		this.config = config;
 		const { token, mongopath } = config;
 		this.login(token);
-		mongoose.connect(mongopath, {
-			useUnifiedTopology: true,
-			useNewUrlParser: true,
-			useFindAndModify: false,
-			keepAlive: true,
-		});
 		const commandFiles: string[] = await globPromise(
 			`${__dirname}/../commands/**/*{.ts,.js}`
 		);
@@ -63,6 +57,12 @@ class Bot extends Client {
 			this.events.set(event.name, event);
 			this.on(event.name, event.run.bind(null, this));
 		});
+		// mongoose.connect(mongopath, {
+		// 	useUnifiedTopology: true,
+		// 	useNewUrlParser: true,
+		// 	useFindAndModify: false,
+		// 	keepAlive: true,
+		// });
 	}
 	public getCommand(value: string): Command | null {
 		return this.commands.get(value) ||

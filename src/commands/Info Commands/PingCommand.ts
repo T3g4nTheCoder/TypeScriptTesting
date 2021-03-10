@@ -26,7 +26,7 @@ export const run: RunFunction = async (client, message, args) => {
 				fields: [
 					{
 						name: 'API',
-						value: `${client.ws.ping} MS!`,
+						value: `${client.ws.ping} MS`,
 						inline: true,
 					},
 					{
