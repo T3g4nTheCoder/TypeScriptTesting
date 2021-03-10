@@ -1,5 +1,4 @@
 dist
-.yarn
 .yarn/*
 !.yarn/cache
 !.yarn/releases

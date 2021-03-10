@@ -6,17 +6,18 @@ import { Role, RoleManager, TextChannel } from 'discord.js';
 import { RunFunction } from '../../interfaces/Command';
 
 export const run: RunFunction = async (client, message, args) => {
-	/*
-    
-    TODO:
-    
-    1. Create a role that has no permissions to the channel
-    and assign it to everyone. Don't take the role away when unlocked.
-    This role will be the role to lock for all of the future locked channels.
-
-    */
-
 	const roleName = 'Locked Channels [Guildster]';
+
+	if (message.deletable) {
+		message.delete();
+	}
+
+	if (!message.member.hasPermission('MANAGE_CHANNELS')) {
+		message.channel.send(
+			client.error('You do not have enough permissions to run this command.')
+		);
+		return;
+	}
 
 	const msg = await message.channel.send(
 		client.embed({ description: 'Locking channel...', color: 'RED' }, message)
@@ -28,13 +29,16 @@ export const run: RunFunction = async (client, message, args) => {
 			(role) => role.name == roleName
 		);
 		if (!fetchRole) {
-			if (!message.guild.me.hasPermission('MANAGE_ROLES')) {
+			if (
+				!message.guild.me.hasPermission('MANAGE_ROLES') ||
+				!message.guild.me.hasPermission('MANAGE_CHANNELS')
+			) {
 				// If I don't have permssion to create roles.
 				msg.edit(
 					client.embed(
 						{
 							description:
-								'I do not have enough permissions to create a role to lock the channel with. I require permission: Manage Roles',
+								'I do not have enough permissions to create a role to lock the channel with. I require permission: Manage Roles, Manage Channels or Admin',
 						},
 						message
 					)
@@ -69,8 +73,6 @@ export const run: RunFunction = async (client, message, args) => {
 
 	(channel as TextChannel).updateOverwrite(role.id, {
 		SEND_MESSAGES: false,
-		ATTACH_FILES: false,
-		SEND_TTS_MESSAGES: false,
 	});
 
 	msg.edit(
