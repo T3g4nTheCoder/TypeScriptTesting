@@ -57,12 +57,12 @@ class Bot extends Client {
 			this.events.set(event.name, event);
 			this.on(event.name, event.run.bind(null, this));
 		});
-		// mongoose.connect(mongopath, {
-		// 	useUnifiedTopology: true,
-		// 	useNewUrlParser: true,
-		// 	useFindAndModify: false,
-		// 	keepAlive: true,
-		// });
+		mongoose.connect(mongopath, {
+			useUnifiedTopology: true,
+			useNewUrlParser: true,
+			useFindAndModify: false,
+			keepAlive: true,
+		});
 	}
 	public getCommand(value: string): Command | null {
 		return this.commands.get(value) ||
